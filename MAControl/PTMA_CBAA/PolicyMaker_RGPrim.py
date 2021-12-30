@@ -303,7 +303,7 @@ class PolicyMaker_Probability(PolicyMaker):
                                 self_price = PolicyMaker_Probability.Prices[si][ti]
                             else:
                                 self_price = 0
-                            if self_price:
+                            if self_price and (self_price in NN_Prices):
                                 PolicyMaker_Probability.Rank.append(NN_Prices.index(self_price))
                             else:
                                 PolicyMaker_Probability.Rank.append(1000)
