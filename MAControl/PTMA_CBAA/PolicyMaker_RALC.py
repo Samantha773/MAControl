@@ -43,7 +43,7 @@ class PolicyMaker_Probability(PolicyMaker):
         self.CommState = 'G'  # G=GOOD B=BAD
         self.max_yield = [20, 20]
         self.co_yield = [0, 0, 0, 0]
-        self.Ratio = [0.7, 0.5]
+        self.Ratio = [0.8, 0.8]
 
     def find_mate(self, obs_n, r=0.5):
         selfpos = np.array(obs_n[self.index][2:4])
@@ -226,10 +226,10 @@ class PolicyMaker_Probability(PolicyMaker):
                         check_l = [0 for _ in range(bar)]
                         for n in range(bar):
                             for q in range(self.co_yield[0]):
-                                check_l[n] = check[n] + check[n+bar*q]
+                                check_l[n] = check_l[n] + check[n+bar*q]
                         check_l = [0 if item == 0 else 1 for item in check_l]
                         RATE = sum(check_l)/len(check_l)
-                        if RATE < self.arglist.thr and self.co_yield[0] < self.max_yield[0]:
+                        if RATE < self.arglist.thr and self.co_yield[0] < self.max_yield[0] and bar > 1:
                             PolicyMaker_Probability.Yield[0] = True
                         else:
                             PolicyMaker_Probability.Yield[0] = False
@@ -237,7 +237,7 @@ class PolicyMaker_Probability(PolicyMaker):
                             KK = [[] for _ in range(bar)]
                             for n in range(bar):
                                 for q in range(self.co_yield[0]):
-                                    KK[n] = K[n] + K[n+bar*q]
+                                    KK[n] = KK[n] + K[n+bar*q]
                             KK = [[list(t) for t in set(tuple(_) for _ in item)] for item in KK]
                             KK = [sorted(item, key=lambda x: x[2], reverse=True) for item in KK]
                             PolicyMaker_Probability.SEEN_TARGETS = KK
@@ -291,11 +291,11 @@ class PolicyMaker_Probability(PolicyMaker):
                     if len(check) % bar == 0:
                         check_l = [0 for _ in range(bar)]
                         for n in range(bar):
-                            for q in range(self.co_yield[0]):
-                                check_l[n] = check[n] + check[n+bar*q]
+                            for q in range(self.co_yield[1]):
+                                check_l[n] = check_l[n] + check[n+bar*q]
                         check_l = [0 if item == 0 else 1 for item in check_l]
                         RATE = sum(check_l)/len(check_l)
-                        if RATE < self.arglist.thr and self.co_yield[1] < self.max_yield[1]:
+                        if RATE < self.arglist.thr and self.co_yield[1] < self.max_yield[1] and bar > 1:
                             PolicyMaker_Probability.Yield[1] = True
                         else:
                             PolicyMaker_Probability.Yield[1] = False
@@ -303,7 +303,7 @@ class PolicyMaker_Probability(PolicyMaker):
                             MM = [[] for _ in range(bar)]
                             for n in range(bar):
                                 for q in range(self.co_yield[1]):
-                                    MM[n] = M[n] + M[n+bar*q]
+                                    MM[n] = MM[n] + M[n+bar*q]
                             MM = [[list(t) for t in set(tuple(_) for _ in item)] for item in MM]
                             MM = [sorted(item, key=lambda x: x[2], reverse=True) for item in MM]
                             PolicyMaker_Probability.KNOWN_TARGETS = MM

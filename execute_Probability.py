@@ -5,12 +5,12 @@ import time
 import MAControl.PTMA_CBAA.InnerController_PID as IC_P
 import MAControl.PTMA_CBAA.MotionController_L1_TECS as MC_L
 import MAControl.PTMA_CBAA.PathPlanner_Shared as PP_S
-import MAControl.PTMA_CBAA.PolicyMaker_BadComm as PM_A
+import MAControl.PTMA_CBAA.PolicyMaker_RALC as PM_A
 import logging
 import os
 
 # 运行 execute_Probability.py 需要补足参数，如 execute_all_P1/P2/P3/P4_unit/Q.py 中所示
-logging.basicConfig(filename='commRALC.log', level=logging.INFO)
+logging.basicConfig(filename='\\Users\\xj\\PycharmProjects\\Result-A\\comm.log', level=logging.INFO)
 logging.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 logging.info(time.strftime('%Y-%m-%d, %H:%M:%S'))
 logging.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
@@ -20,24 +20,18 @@ logging.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 def parse_args():
     parser = argparse.ArgumentParser("Control Experiments for Multi-Agent Environments")
-    parser.add_argument("--scenario", type=str, default="scenario_paperComm", help="name of the scenario script")
+    parser.add_argument("--scenario", type=str, default="scenario_paper", help="name of the scenario script")
     parser.add_argument("--step-max", type=int, default=4000, help="maximum steps")
     parser.add_argument("--episode-max", type=int, default=30, help="maximum episodes")
-    # parser.add_argument("--p1", action='append', type=float, dest='p1', default=[], help="P: Line one")
-    # parser.add_argument("--p2", action='append', type=float, dest='p2', default=[], help="P: Line Two")
-    # parser.add_argument("--p3", action='append', type=float, dest='p3', default=[], help="P: Line Three")
-    # parser.add_argument("--q1", action='append', type=float, dest='q1', default=[], help="Q: Line One")
-    # parser.add_argument("--q2", action='append', type=float, dest='q2', default=[], help="Q: Line Two")
-    # parser.add_argument("--q3", action='append', type=float, dest='q3', default=[], help="Q: Line Three")
     parser.add_argument("--numU", type=int, default=5, help="how many UAVs")
     parser.add_argument("--comm", type=str, default="B", help="which communication model")
+    parser.add_argument("--thr", type=float, default=0.8, help="comm quality threshold")
+    parser.add_argument("--p", type=float, dest='p', default=0.7, help="Bernoulli Model Comm Level")
+    parser.add_argument("--pG", type=float, dest='pG', default=0.9, help="G.E. Model Good State")
+    parser.add_argument("--pB", type=float, dest='pB', default=0.1, help="G.E. Model Bad State")
     parser.add_argument("--pGG", type=float, dest='pGG', default=0.5, help="G.E. Model Good to Good Rate")
     parser.add_argument("--pBB", type=float, dest='pBB', default=0.5, help="G.E. Model Bad to Bad Rate")
     parser.add_argument("--typeT", action='append', type=int, dest='typeT', default=[], help="target types")
-    parser.add_argument("--pG", type=float, dest='pG', default=0.9, help="G.E. Model Good State")
-    parser.add_argument("--pB", type=float, dest='pB', default=0.1, help="G.E. Model Bad State")
-    parser.add_argument("--thr", type=float, default=0.25, help="comm quality threshold")
-    parser.add_argument("--p", type=float, dest='p', default=0.7, help="Bernoulli Model Comm Level")
 
     return parser.parse_args()
 
