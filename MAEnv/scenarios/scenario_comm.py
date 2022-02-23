@@ -28,9 +28,9 @@ class Scenario(BaseScenario):
             agent.size = 0.01  # 10米
         # add landmarks
         world.targets = [Landmark() for i in range(num_targets)]
-        VALUE = [7, 3, 9]
+        VALUE = [70, 50, 90]
         A_DEFENCE = [3, 4, 2]
-        B_DEFENCE = [2, 0, 3]
+        B_DEFENCE = [2, 1, 3]
         for i, landmark in enumerate(world.targets):
             landmark.name = 'target %d' % i
             landmark.collide = False
@@ -96,17 +96,13 @@ class Scenario(BaseScenario):
         # TARGET-UAV 分配情况 TASK-TIME
         X_JA = [0 for j in range(len(world.targets))]
         X_JB = [0 for j in range(len(world.targets))]
-        T_JA = [0 for j in range(len(world.targets))]
-        T_JB = [0 for j in range(len(world.targets))]
         for a, agent in enumerate(world.agents):
             task = [agent.attacking_to, agent.attacking_type, agent.attacking_time]
             # 长度为UAV数量，每个元素是 [所攻击的目标，任务类型(A/B)，转入攻击的时刻(step) ]
             if task[1] == 'A':
                 X_JA[task[0]] += 1
-                T_JA[task[0]] += task[2]
             elif task[1] == 'B':
                 X_JB[task[0]] += 1
-                T_JB[task[0]] += task[2]
             else:
                 pass
 
@@ -114,25 +110,15 @@ class Scenario(BaseScenario):
         E_JB = []
         W = []
         for j in range(len(world.targets)):
-            T_JA[j] = T_JA[j] / X_JA[j] if not X_JA[j] == 0 else 0
-            T_JB[j] = T_JB[j] / X_JB[j] if not X_JB[j] == 0 else 0
             E_JA.append(world.targets[j].a_defence)
             E_JB.append(world.targets[j].b_defence)
             W.append(world.targets[j].value)
 
         F = []
         for j in range(len(world.targets)):
-            delta = 1
-            if X_JA[j] < E_JA[j]:
-                delta = 0
-            else:
-                if T_JA[j] > T_JB[j]:
-                    ddt = 0.1*T_JB[j]-0.1*T_JA[j]  # dt=0.1
-                    delta = math.exp(ddt/400)   # 至多罚一个自然对数(e^1)
-                else:
-                    pass
-            ra = abs(X_JA[j] - E_JA[j])+1
-            rb = abs(X_JB[j] - E_JB[j])+1
+            delta = 10
+            ra = abs(X_JA[j] - E_JA[j])+10
+            rb = abs(X_JB[j] - E_JB[j])+10
             F.append(delta*W[j]/ra/rb)
         return F
 
