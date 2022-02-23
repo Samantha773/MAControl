@@ -20,12 +20,12 @@ logging.info('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 def parse_args():
     parser = argparse.ArgumentParser("Control Experiments for Multi-Agent Environments")
-    parser.add_argument("--scenario", type=str, default="scenario_paper", help="name of the scenario script")
-    parser.add_argument("--step-max", type=int, default=4000, help="maximum steps")
+    parser.add_argument("--scenario", type=str, default="scenario_comm", help="name of the scenario script")
+    parser.add_argument("--step-max", type=int, default=7000, help="maximum steps")
     parser.add_argument("--episode-max", type=int, default=30, help="maximum episodes")
+    parser.add_argument("--thr", type=float, default=0.8, help="comm quality threshold")
     parser.add_argument("--numU", type=int, default=5, help="how many UAVs")
     parser.add_argument("--comm", type=str, default="B", help="which communication model")
-    parser.add_argument("--thr", type=float, default=0.8, help="comm quality threshold")
     parser.add_argument("--p", type=float, dest='p', default=0.7, help="Bernoulli Model Comm Level")
     parser.add_argument("--pG", type=float, dest='pG', default=0.9, help="G.E. Model Good State")
     parser.add_argument("--pB", type=float, dest='pB', default=0.1, help="G.E. Model Bad State")
