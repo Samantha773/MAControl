@@ -216,14 +216,20 @@ class PolicyMaker_Probability(PolicyMaker):
                         PolicyMaker_Probability.SEEN_TARGETS.append(self.seen_targets)  # All -- Occupied = Active
                     else:
                         PolicyMaker_Probability.SEEN_TARGETS.append(['BROKEN', 'B', 'R', 'O', 'K', 'E', 'N'])
-                    check = [1 if 'BROKEN' in item else 0 for item in PolicyMaker_Probability.SEEN_TARGETS]
+                    check = [0 if 'BROKEN' in item else 1 for item in PolicyMaker_Probability.SEEN_TARGETS]
                     rate = sum(check) / len(check)
                     bar = self.arglist.numU - len(PolicyMaker_Probability.Occupied_U)
                     # True # therefore act ↑ and yield ↓
                     self.operate_step(0, step)
                     self.co_yield[0] += 1
                     if len(check) % bar == 0:
-                        if rate > self.arglist.thr and self.co_yield[0] < self.max_yield[0]:
+                        check_l = [0 for _ in range(bar)]
+                        for n in range(bar):
+                            for q in range(self.co_yield[0]):
+                                check_l[n] = check[n] + check[n+bar*q]
+                        check_l = [0 if item == 0 else 1 for item in check_l]
+                        RATE = sum(check_l)/len(check_l)
+                        if RATE < self.arglist.thr and self.co_yield[0] < self.max_yield[0]:
                             PolicyMaker_Probability.Yield[0] = True
                         else:
                             PolicyMaker_Probability.Yield[0] = False
@@ -276,14 +282,20 @@ class PolicyMaker_Probability(PolicyMaker):
                         # 这里是个体所知的目标们 是出价的依据
                     else:
                         PolicyMaker_Probability.KNOWN_TARGETS.append(['B', 'BROKEN', 'R', 'O', 'K', 'E', 'N'])
-                    check = [1 if 'BROKEN' in item else 0 for item in PolicyMaker_Probability.KNOWN_TARGETS]
+                    check = [0 if 'BROKEN' in item else 1 for item in PolicyMaker_Probability.KNOWN_TARGETS]
                     rate = sum(check) / len(check)
                     bar = self.arglist.numU - len(PolicyMaker_Probability.Occupied_U)
                     # True # therefore act ↑ and yield ↓
                     self.operate_step(0, step)
                     self.co_yield[1] += 1
                     if len(check) % bar == 0:
-                        if rate > self.arglist.thr and self.co_yield[1] < self.max_yield[1]:
+                        check_l = [0 for _ in range(bar)]
+                        for n in range(bar):
+                            for q in range(self.co_yield[0]):
+                                check_l[n] = check[n] + check[n+bar*q]
+                        check_l = [0 if item == 0 else 1 for item in check_l]
+                        RATE = sum(check_l)/len(check_l)
+                        if RATE < self.arglist.thr and self.co_yield[1] < self.max_yield[1]:
                             PolicyMaker_Probability.Yield[1] = True
                         else:
                             PolicyMaker_Probability.Yield[1] = False
