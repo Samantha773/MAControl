@@ -28,7 +28,7 @@ class Scenario(BaseScenario):
             agent.size = 0.01  # 10米
         # add landmarks
         world.targets = [Landmark() for i in range(num_targets)]
-        VALUE = [70, 50, 90]
+        VALUE = [7, 5, 9]
         A_DEFENCE = [3, 4, 2]
         B_DEFENCE = [2, 1, 3]
         for i, landmark in enumerate(world.targets):
@@ -116,10 +116,10 @@ class Scenario(BaseScenario):
 
         F = []
         for j in range(len(world.targets)):
-            delta = 10
-            ra = abs(X_JA[j] - E_JA[j])+10
-            rb = abs(X_JB[j] - E_JB[j])+10
-            F.append(delta*W[j]/ra/rb)
+            ra = math.exp(abs(X_JA[j] - E_JA[j]))
+            rb = math.exp(abs(X_JB[j] - E_JB[j]))
+            rc = W[j]/ra + W[j]/rb
+            F.append(rc)
         return F
 
     def reward(self, agent, world):

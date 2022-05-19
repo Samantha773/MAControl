@@ -36,6 +36,7 @@ class PolicyMaker_Probability(PolicyMaker):
         self.seen_targets = []
         self.close_area = []
         self.assigned = 0  # 是/否决定了去向
+        self.id = 0
 
         # 以下为一些阶段的初始设定步数
         # >> 未来步数点可修改，从而可以主动停留在某一阶段/步
@@ -281,6 +282,7 @@ class PolicyMaker_Probability(PolicyMaker):
             elif step == self.Step3:
                 # print('UAV', self.index, 'extract bids, sort and determine each rank')
                 ACTIVE_U = list(set([i for i in range(self.arglist.numU)]) - set(PolicyMaker_Probability.Occupied_U))
+                self.id = ACTIVE_U.index(self.index)
                 self.close_area = self.find_mate(obs_n)
                 if self.index == max(ACTIVE_U):
                     PolicyMaker_Probability.Rank = []
@@ -313,8 +315,7 @@ class PolicyMaker_Probability(PolicyMaker):
                     pass
 
             elif step == self.Step4:
-                ACTIVE_U = list(set([i for i in range(self.arglist.numU)]) - set(PolicyMaker_Probability.Occupied_U))
-                si = ACTIVE_U.index(self.index)
+                si = self.id
                 self_rank = PolicyMaker_Probability.Rank[si]
                 # 根据当前目标的类型估计，确定需要的UAV个数
                 DEMANDED = 0
